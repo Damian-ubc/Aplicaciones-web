@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schoologycal</title>
+    <title>Schoologycal - Plataforma Educativa</title>
     <style>
-        /* Estilos base - manteniendo simplicidad como en el PDF */
+        /* ESTILOS CSS */
         * {
             margin: 0;
             padding: 0;
@@ -19,13 +19,20 @@
             line-height: 1.6;
         }
         
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
         
-        /* Header/Landing Page */
         .header {
             text-align: center;
             padding: 40px 0;
@@ -37,7 +44,9 @@
             margin-bottom: 30px;
         }
         
-        .login-form {
+        .login-form,
+        .register-form,
+        .validation-form {
             max-width: 400px;
             margin: 0 auto;
             background: white;
@@ -57,9 +66,7 @@
             font-weight: bold;
         }
         
-        input[type="text"],
-        input[type="password"],
-        input[type="email"] {
+        input, select, textarea {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
@@ -90,52 +97,1238 @@
         .links a {
             color: #007bff;
             text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .links a:hover {
+            text-decoration: underline;
+        }
+        
+        .message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .role-selection {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .role-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .role-card {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            background: white;
+        }
+        
+        .role-card:hover {
+            border-color: #007bff;
+            background: #f8f9fa;
+        }
+        
+        .dashboard-header {
+            background: #f8f9fa;
+            padding: 20px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .student-name,
+        .teacher-name {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        
+        .student-email,
+        .teacher-email {
+            color: #666;
+        }
+        
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .logout-btn:hover {
+            background: #c82333;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .nav-tab {
+            padding: 15px 30px;
+            color: #333;
+            border-bottom: 3px solid transparent;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .nav-tab.active {
+            border-bottom-color: #007bff;
+            color: #007bff;
+        }
+        
+        .dashboard-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .course-card {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            background: white;
+        }
+        
+        .course-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .table th, .table td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        .attendance-present {
+            color: green;
+            font-weight: bold;
+        }
+        
+        .attendance-absent {
+            color: red;
+            font-weight: bold;
+        }
+        
+        .grade-excellent {
+            color: green;
+            font-weight: bold;
+        }
+        
+        .grade-good {
+            color: orange;
+            font-weight: bold;
+        }
+        
+        .grade-poor {
+            color: red;
+            font-weight: bold;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            background: white;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            margin: 2px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .add-btn {
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 500px;
+            max-width: 90%;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .cancel-btn {
+            background: #6c757d;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .save-btn {
+            background: #007bff;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
         }
     </style>
 </head>
 <body>
-    <!-- Landing Page / Login -->
-    <div class="container">
-        <div class="header">
-            <div class="logo">Schoologycal</div>
-            
-            <!-- Formulario de Login -->
-            <div class="login-form">
-                <h2>Inicia Sesión</h2>
-                <form id="loginForm">
-                    <div class="form-group">
-                        <label for="username">GMAIL O USUARIO</label>
-                        <input type="text" id="username" name="username" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="password">CONTRASEÑA</label>
-                        <input type="password" id="password" name="password" required>
-                    </div>
-                    
-                    <button type="submit" class="btn">ACCEDER</button>
-                    
-                    <div class="links">
-                        <a href="#">¿olvidaste tu contraseña?</a>
-                    </div>
-                </form>
-            </div>
-            
-            <!-- Enlace a crear cuenta -->
-            <div style="margin-top: 30px;">
-                <p>¿No tienes cuenta? <a href="register.html">Crear cuenta</a></p>
+    <!-- LOGIN -->
+    <div id="login-page" class="page active">
+        <div class="container">
+            <div class="header">
+                <div class="logo">Schoologycal</div>
+                <div class="login-form">
+                    <h2>Inicia Sesión</h2>
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="username">GMAIL O USUARIO</label>
+                            <input type="text" id="username" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">CONTRASEÑA</label>
+                            <input type="password" id="password" name="password" required>
+                        </div>
+                        <button type="submit" class="btn">ACCEDER</button>
+                        <div class="links">
+                            <a onclick="showPage('register-page')">Crear cuenta</a>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- REGISTRO -->
+    <div id="register-page" class="page">
+        <div class="container">
+            <div class="header">
+                <div class="logo">Schoologycal</div>
+                <div class="register-form">
+                    <h2>Crear cuenta</h2>
+                    <form id="registerForm">
+                        <div class="form-group">
+                            <label for="nombre">NOMBRE</label>
+                            <input type="text" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">CORREO</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cumpleanos">CUMPLEAÑOS</label>
+                            <input type="date" id="cumpleanos" name="cumpleanos" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">CONTRASEÑA</label>
+                            <input type="password" id="password" name="password" required>
+                        </div>
+                        <button type="submit" class="btn">CREAR CUENTA</button>
+                        <div class="links">
+                            <a onclick="showPage('login-page')">¿YA TIENES UNA? INICIA SESIÓN</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VALIDACIÓN DE ROL -->
+    <div id="validation-page" class="page">
+        <div class="container">
+            <div class="header">
+                <div class="logo">Schoologycal</div>
+                <div class="validation-form">
+                    <h2>INGRESA TUS DATOS PARA</h2>
+                    <h3>VALIDACIÓN DE RROL</h3>
+                    <form id="validationForm">
+                        <div class="form-group">
+                            <label for="correo">CORREO</label>
+                            <input type="email" id="correo" name="correo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="id">ID</label>
+                            <input type="text" id="id" name="id" required>
+                        </div>
+                        <button type="submit" class="btn">ENVIAR CÓDIGO DE VERIFICACIÓN</button>
+                    </form>
+                    <div id="successMessage" class="message success" style="display: none;">
+                        ¡VALIDACIÓN EXITOSA!
+                        <br>
+                        <button onclick="selectRole()" class="btn">ACCEDER</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SELECCIÓN DE ROL -->
+    <div id="role-page" class="page">
+        <div class="container">
+            <div class="header">
+                <div class="logo">Schoologycal</div>
+                <div class="role-selection">
+                    <h2>Selecciona tu rol</h2>
+                    <div class="role-options">
+                        <div class="role-card" onclick="enterDashboard('estudiante')">
+                            <h3>👨‍🎓 Estudiante</h3>
+                            <p>Accede a tus cursos, calificaciones y asistencias</p>
+                        </div>
+                        <div class="role-card" onclick="enterDashboard('docente')">
+                            <h3>👨‍🏫 Docente</h3>
+                            <p>Gestiona estudiantes, cursos y registros</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD ESTUDIANTE -->
+    <div id="dashboard-estudiante" class="page">
+        <div class="dashboard-header">
+            <div class="user-info">
+                <div>
+                    <div class="student-name">NOMBRE DEL ESTUDIANTE</div>
+                    <div class="student-email">hello@reallygreatsite.com</div>
+                </div>
+                <button class="logout-btn" onclick="logout()">Cerrar sesión</button>
+            </div>
+        </div>
+        
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showSection('cursos')">Mis cursos</div>
+            <div class="nav-tab" onclick="showSection('calificaciones')">Mis calificaciones</div>
+            <div class="nav-tab" onclick="showSection('asistencias')">Asistencias</div>
+            <div class="nav-tab" onclick="showSection('reportes')">Reportes personales</div>
+        </div>
+        
+        <div class="dashboard-content">
+            <div id="cursos" class="section active">
+                <h1>Mis cursos</h1>
+                <div class="courses-grid" id="cursos-grid"></div>
+            </div>
+            
+            <div id="calificaciones" class="section">
+                <h1>Mis calificaciones</h1>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Asignatura</th>
+                            <th>Parcial 1</th>
+                            <th>Parcial 2</th>
+                            <th>Parcial 3</th>
+                            <th>Promedio</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-calificaciones"></tbody>
+                </table>
+            </div>
+            
+            <div id="asistencias" class="section">
+                <h1>Asistencias</h1>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Asignatura</th>
+                            <th>Clases Totales</th>
+                            <th>Asistencias</th>
+                            <th>Faltas</th>
+                            <th>Porcentaje</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-asistencias"></tbody>
+                </table>
+            </div>
+            
+            <div id="reportes" class="section">
+                <h1>Reportes personales</h1>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Promedio General</div>
+                        <div class="stat-value" id="promedio-general">0.0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Asistencia General</div>
+                        <div class="stat-value" id="asistencia-general">0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Cursos Inscritos</div>
+                        <div class="stat-value" id="total-cursos">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Mejor Asignatura</div>
+                        <div class="stat-value" id="mejor-asignatura">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD DOCENTE -->
+    <div id="dashboard-docente" class="page">
+        <div class="dashboard-header">
+            <div class="user-info">
+                <div>
+                    <div class="teacher-name">NOMBRE DEL DOCENTE</div>
+                    <div class="teacher-email">docente@reallygreatsite.com</div>
+                </div>
+                <button class="logout-btn" onclick="logout()">Cerrar sesión</button>
+            </div>
+        </div>
+        
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showSectionDocente('gestion-estudiantes')">Gestionar estudiantes</div>
+            <div class="nav-tab" onclick="showSectionDocente('gestion-cursos')">Gestionar cursos</div>
+            <div class="nav-tab" onclick="showSectionDocente('registros')">Registro</div>
+        </div>
+        
+        <div class="dashboard-content">
+            <!-- GESTIÓN ESTUDIANTES -->
+            <div id="gestion-estudiantes" class="section active">
+                <h1>Gestionar estudiantes</h1>
+                <input type="text" class="search-box" placeholder="Buscar por nombre o DNI..." onkeyup="buscarEstudiantes(this.value)">
+                <button class="add-btn" onclick="openModal('addStudentModal')">+ Agregar estudiante</button>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Email</th>
+                            <th>DNI</th>
+                            <th>Grado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-estudiantes"></tbody>
+                </table>
+            </div>
+            
+            <!-- GESTIÓN CURSOS -->
+            <div id="gestion-cursos" class="section">
+                <h1>Gestionar cursos</h1>
+                <input type="text" class="search-box" placeholder="Buscar por curso o docente..." onkeyup="buscarCursos(this.value)">
+                <button class="add-btn" onclick="openModal('addCourseModal')">+ Agregar curso</button>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nombre del Curso</th>
+                            <th>Descripción</th>
+                            <th>Docente</th>
+                            <th>Horario</th>
+                            <th>Cupo Máx.</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-cursos-docente"></tbody>
+                </table>
+            </div>
+            
+            <!-- REGISTROS -->
+            <div id="registros" class="section">
+                <h1>Registro de asistencia y calificaciones</h1>
+                <button class="add-btn" onclick="openModal('addRegistroModal')">Añadir registro</button>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Estudiante</th>
+                            <th>Asignatura</th>
+                            <th>Fecha</th>
+                            <th>Asistencia</th>
+                            <th>Calificación</th>
+                            <th>Observaciones</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-registros"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALES -->
+    <div id="addStudentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Añadir estudiante</h2>
+                <button class="close-btn" onclick="closeModal('addStudentModal')">&times;</button>
+            </div>
+            <form onsubmit="agregarEstudiante(event)">
+                <div class="form-group">
+                    <label>NOMBRE</label>
+                    <input type="text" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label>APELLIDO</label>
+                    <input type="text" name="apellido" required>
+                </div>
+                <div class="form-group">
+                    <label>EMAIL</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>DNI</label>
+                    <input type="text" name="dni" required>
+                </div>
+                <div class="form-group">
+                    <label>GRADO</label>
+                    <input type="text" name="grado" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" onclick="closeModal('addStudentModal')">Cancelar</button>
+                    <button type="submit" class="save-btn">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="addCourseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Añadir curso</h2>
+                <button class="close-btn" onclick="closeModal('addCourseModal')">&times;</button>
+            </div>
+            <form onsubmit="agregarCurso(event)">
+                <div class="form-group">
+                    <label>NOMBRE DEL CURSO</label>
+                    <input type="text" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label>DESCRIPCIÓN</label>
+                    <textarea name="descripcion" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>DOCENTE</label>
+                    <input type="text" name="docente" required>
+                </div>
+                <div class="form-group">
+                    <label>HORARIO</label>
+                    <input type="text" name="horario" required>
+                </div>
+                <div class="form-group">
+                    <label>CUPO MAX.</label>
+                    <input type="number" name="cupo" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" onclick="closeModal('addCourseModal')">Cancelar</button>
+                    <button type="submit" class="save-btn">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="addRegistroModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Añadir registro</h2>
+                <button class="close-btn" onclick="closeModal('addRegistroModal')">&times;</button>
+            </div>
+            <form onsubmit="agregarRegistro(event)">
+                <div class="form-group">
+                    <label>ESTUDIANTE</label>
+                    <select name="estudianteId" required id="selectEstudiantes"></select>
+                </div>
+                <div class="form-group">
+                    <label>ASIGNATURA</label>
+                    <select name="cursoId" required id="selectCursos"></select>
+                </div>
+                <div class="form-group">
+                    <label>FECHA</label>
+                    <input type="date" name="fecha" required>
+                </div>
+                <div class="form-group">
+                    <label>ASISTENCIA</label>
+                    <select name="asistencia">
+                        <option value="Presente">✅ Presente</option>
+                        <option value="Ausente">❌ Ausente</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>CALIFICACIÓN (0-20)</label>
+                    <input type="number" name="calificacion" min="0" max="20" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label>OBSERVACIONES</label>
+                    <textarea name="observaciones" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" onclick="closeModal('addRegistroModal')">Cancelar</button>
+                    <button type="submit" class="save-btn">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
+        // ========== SISTEMA DE ALMACENAMIENTO ==========
+        let estudiantes = JSON.parse(localStorage.getItem('estudiantes')) || [
+            {
+                id: 1,
+                nombre: "Juan",
+                apellido: "Pérez",
+                email: "juan@email.com",
+                dni: "12345678",
+                grado: "10mo Grado"
+            }
+        ];
+
+        let cursos = JSON.parse(localStorage.getItem('cursos')) || [
+            {
+                id: 1,
+                nombre: "Matemáticas Avanzadas",
+                descripcion: "Curso de matemáticas para nivel avanzado",
+                docente: "Dr. Carlos Rodríguez",
+                horario: "Lunes y Miércoles 10:00-12:00",
+                cupo: 30
+            },
+            {
+                id: 2,
+                nombre: "Literatura Universal",
+                descripcion: "Estudio de obras literarias clásicas",
+                docente: "Dra. María González", 
+                horario: "Martes y Jueves 14:00-16:00",
+                cupo: 25
+            }
+        ];
+
+        let registros = JSON.parse(localStorage.getItem('registros')) || [
+            {
+                id: 1,
+                estudianteId: 1,
+                cursoId: 1,
+                estudiante: "Juan Pérez",
+                asignatura: "Matemáticas Avanzadas",
+                fecha: "2024-01-15",
+                asistencia: "Presente",
+                calificacion: 18,
+                observaciones: "Excelente participación",
+                tipo: "ambos"
+            },
+            {
+                id: 2,
+                estudianteId: 1,
+                cursoId: 2,
+                estudiante: "Juan Pérez",
+                asignatura: "Literatura Universal", 
+                fecha: "2024-01-16",
+                asistencia: "Presente",
+                calificacion: 16,
+                observaciones: "Buena interpretación",
+                tipo: "ambos"
+            }
+        ];
+
+        // Guardar datos en LocalStorage
+        function guardarDatos() {
+            localStorage.setItem('estudiantes', JSON.stringify(estudiantes));
+            localStorage.setItem('cursos', JSON.stringify(cursos));
+            localStorage.setItem('registros', JSON.stringify(registros));
+        }
+
+        // ========== NAVEGACIÓN ENTRE PÁGINAS ==========
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        function selectRole() {
+            showPage('role-page');
+        }
+
+        function enterDashboard(rol) {
+            if (rol === 'estudiante') {
+                showPage('dashboard-estudiante');
+                renderCursos();
+                renderCalificaciones();
+                renderAsistencias();
+                renderReportes();
+            } else {
+                showPage('dashboard-docente');
+                renderEstudiantes();
+                renderCursosDocente();
+                renderRegistros();
+            }
+        }
+
+        function logout() {
+            if(confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                showPage('login-page');
+            }
+        }
+
+        // ========== NAVEGACIÓN SECCIONES ==========
+        function showSection(sectionId) {
+            document.querySelectorAll('#dashboard-estudiante .nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('#dashboard-estudiante .section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            event.target.classList.add('active');
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        function showSectionDocente(sectionId) {
+            document.querySelectorAll('#dashboard-docente .nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('#dashboard-docente .section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            event.target.classList.add('active');
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        // ========== MANEJO DE MODALES ==========
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+            
+            if (modalId === 'addRegistroModal') {
+                llenarSelectEstudiantes();
+                llenarSelectCursos();
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Cerrar modal al hacer click fuera
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        // ========== FORMULARIOS ==========
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            // Aquí iría la lógica de login
-            console.log('Login attempted');
-            // Redirigir a validación de rol
-            window.location.href = 'validacion-rol.html';
+            showPage('validation-page');
         });
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showPage('validation-page');
+        });
+
+        document.getElementById('validationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('successMessage').style.display = 'block';
+        });
+
+        // ========== FUNCIONES ESTUDIANTE ==========
+        function renderCursos() {
+            const grid = document.getElementById('cursos-grid');
+            grid.innerHTML = '';
+            
+            cursos.forEach(curso => {
+                const card = document.createElement('div');
+                card.className = 'course-card';
+                card.innerHTML = `
+                    <div class="course-title">${curso.nombre}</div>
+                    <p>${curso.descripcion}</p>
+                    <div style="margin-top: 15px;">
+                        <strong>Profesor:</strong> ${curso.docente}
+                    </div>
+                    <div>
+                        <strong>Horario:</strong> ${curso.horario}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderCalificaciones() {
+            const tbody = document.getElementById('tabla-calificaciones');
+            tbody.innerHTML = '';
+            
+            const calificacionesPorAsignatura = {};
+            
+            registros.forEach(registro => {
+                if (registro.estudianteId === 1 && registro.calificacion) {
+                    if (!calificacionesPorAsignatura[registro.asignatura]) {
+                        calificacionesPorAsignatura[registro.asignatura] = [];
+                    }
+                    calificacionesPorAsignatura[registro.asignatura].push(registro.calificacion);
+                }
+            });
+            
+            Object.keys(calificacionesPorAsignatura).forEach(asignatura => {
+                const calificaciones = calificacionesPorAsignatura[asignatura];
+                const parcial1 = calificaciones[0] || '-';
+                const parcial2 = calificaciones[1] || '-';
+                const parcial3 = calificaciones[2] || '-';
+                const promedio = (calificaciones.reduce((a, b) => a + b, 0) / calificaciones.length).toFixed(1);
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${asignatura}</strong></td>
+                    <td class="${getClaseNota(parcial1)}">${parcial1}</td>
+                    <td class="${getClaseNota(parcial2)}">${parcial2}</td>
+                    <td class="${getClaseNota(parcial3)}">${parcial3}</td>
+                    <td class="${getClaseNota(promedio)}"><strong>${promedio}</strong></td>
+                    <td class="${parseFloat(promedio) >= 11 ? 'grade-excellent' : 'grade-poor'}">
+                        <strong>${parseFloat(promedio) >= 11 ? '✅ Aprobado' : '❌ Desaprobado'}</strong>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderAsistencias() {
+            const tbody = document.getElementById('tabla-asistencias');
+            tbody.innerHTML = '';
+            
+            const asistenciasPorAsignatura = {};
+            
+            registros.forEach(registro => {
+                if (registro.estudianteId === 1 && registro.asistencia) {
+                    if (!asistenciasPorAsignatura[registro.asignatura]) {
+                        asistenciasPorAsignatura[registro.asignatura] = {
+                            total: 0,
+                            presentes: 0,
+                            ausentes: 0
+                        };
+                    }
+                    
+                    asistenciasPorAsignatura[registro.asignatura].total++;
+                    if (registro.asistencia === 'Presente') {
+                        asistenciasPorAsignatura[registro.asignatura].presentes++;
+                    } else {
+                        asistenciasPorAsignatura[registro.asignatura].ausentes++;
+                    }
+                }
+            });
+            
+            Object.keys(asistenciasPorAsignatura).forEach(asignatura => {
+                const stats = asistenciasPorAsignatura[asignatura];
+                const porcentaje = ((stats.presentes / stats.total) * 100).toFixed(1);
+                const estado = porcentaje >= 80 ? '🟢 Excelente' : porcentaje >= 70 ? '🟡 Aceptable' : '🔴 Bajo';
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${asignatura}</strong></td>
+                    <td>${stats.total}</td>
+                    <td class="attendance-present"><strong>${stats.presentes}</strong></td>
+                    <td class="attendance-absent"><strong>${stats.ausentes}</strong></td>
+                    <td class="${porcentaje >= 80 ? 'attendance-present' : 'attendance-absent'}">
+                        <strong>${porcentaje}%</strong>
+                    </td>
+                    <td class="${porcentaje >= 80 ? 'attendance-present' : porcentaje >= 70 ? 'grade-good' : 'attendance-absent'}">
+                        <strong>${estado}</strong>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderReportes() {
+            const registrosEstudiante = registros.filter(r => r.estudianteId === 1);
+            const calificaciones = registrosEstudiante.filter(r => r.calificacion).map(r => r.calificacion);
+            const asistencias = registrosEstudiante.filter(r => r.asistencia);
+            
+            const promedioGeneral = calificaciones.length > 0 ? 
+                (calificaciones.reduce((a, b) => a + b, 0) / calificaciones.length).toFixed(1) : '0.0';
+            
+            const totalAsistencias = asistencias.length;
+            const asistenciasPresentes = asistencias.filter(a => a.asistencia === 'Presente').length;
+            const porcentajeAsistencia = totalAsistencias > 0 ? 
+                ((asistenciasPresentes / totalAsistencias) * 100).toFixed(1) : '0';
+            
+            document.getElementById('promedio-general').textContent = promedioGeneral;
+            document.getElementById('asistencia-general').textContent = porcentajeAsistencia + '%';
+            document.getElementById('total-cursos').textContent = cursos.length;
+        }
+
+        function getClaseNota(nota) {
+            if (nota === '-' || nota === null) return '';
+            if (nota >= 16) return 'grade-excellent';
+            if (nota >= 11) return 'grade-good';
+            return 'grade-poor';
+        }
+
+        // ========== FUNCIONES DOCENTE ==========
+        function renderEstudiantes() {
+            const tbody = document.getElementById('tabla-estudiantes');
+            tbody.innerHTML = '';
+            
+            estudiantes.forEach(estudiante => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${estudiante.nombre}</td>
+                    <td>${estudiante.apellido}</td>
+                    <td>${estudiante.email}</td>
+                    <td>${estudiante.dni}</td>
+                    <td>${estudiante.grado}</td>
+                    <td>
+                        <button class="action-btn delete-btn" onclick="eliminarEstudiante(${estudiante.id})">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderCursosDocente() {
+            const tbody = document.getElementById('tabla-cursos-docente');
+            tbody.innerHTML = '';
+            
+            cursos.forEach(curso => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${curso.nombre}</td>
+                    <td>${curso.descripcion}</td>
+                    <td>${curso.docente}</td>
+                    <td>${curso.horario}</td>
+                    <td>${curso.cupo}</td>
+                    <td>
+                        <button class="action-btn delete-btn" onclick="eliminarCurso(${curso.id})">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderRegistros() {
+            const tbody = document.getElementById('tabla-registros');
+            tbody.innerHTML = '';
+            
+            registros.forEach(registro => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${registro.estudiante}</td>
+                    <td>${registro.asignatura}</td>
+                    <td>${registro.fecha}</td>
+                    <td class="${registro.asistencia === 'Presente' ? 'attendance-present' : 'attendance-absent'}">
+                        ${registro.asistencia || '-'}
+                    </td>
+                    <td>${registro.calificacion || '-'}</td>
+                    <td>${registro.observaciones}</td>
+                    <td>
+                        <button class="action-btn delete-btn" onclick="eliminarRegistro(${registro.id})">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function buscarEstudiantes(termino) {
+            const tbody = document.getElementById('tabla-estudiantes');
+            tbody.innerHTML = '';
+            
+            const estudiantesFiltrados = termino ? 
+                estudiantes.filter(est =>
+                    est.nombre.toLowerCase().includes(termino.toLowerCase()) ||
+                    est.apellido.toLowerCase().includes(termino.toLowerCase()) ||
+                    est.dni.includes(termino)
+                ) : estudiantes;
+            
+            estudiantesFiltrados.forEach(estudiante => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${estudiante.nombre}</td>
+                    <td>${estudiante.apellido}</td>
+                    <td>${estudiante.email}</td>
+                    <td>${estudiante.dni}</td>
+                    <td>${estudiante.grado}</td>
+                    <td>
+                        <button class="action-btn delete-btn" onclick="eliminarEstudiante(${estudiante.id})">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function buscarCursos(termino) {
+            const tbody = document.getElementById('tabla-cursos-docente');
+            tbody.innerHTML = '';
+            
+            const cursosFiltrados = termino ? 
+                cursos.filter(curso =>
+                    curso.nombre.toLowerCase().includes(termino.toLowerCase()) ||
+                    curso.docente.toLowerCase().includes(termino.toLowerCase())
+                ) : cursos;
+            
+            cursosFiltrados.forEach(curso => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${curso.nombre}</td>
+                    <td>${curso.descripcion}</td>
+                    <td>${curso.docente}</td>
+                    <td>${curso.horario}</td>
+                    <td>${curso.cupo}</td>
+                    <td>
+                        <button class="action-btn delete-btn" onclick="eliminarCurso(${curso.id})">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // ========== CRUD OPERATIONS ==========
+        function agregarEstudiante(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            
+            const nuevoEstudiante = {
+                id: Date.now(),
+                nombre: formData.get('nombre'),
+                apellido: formData.get('apellido'),
+                email: formData.get('email'),
+                dni: formData.get('dni'),
+                grado: formData.get('grado')
+            };
+            
+            estudiantes.push(nuevoEstudiante);
+            guardarDatos();
+            renderEstudiantes();
+            closeModal('addStudentModal');
+            alert('Estudiante agregado exitosamente');
+        }
+
+        function eliminarEstudiante(id) {
+            if (confirm('¿Está seguro de eliminar este estudiante?')) {
+                estudiantes = estudiantes.filter(e => e.id !== id);
+                registros = registros.filter(r => r.estudianteId !== id);
+                guardarDatos();
+                renderEstudiantes();
+                renderRegistros();
+                alert('Estudiante eliminado exitosamente');
+            }
+        }
+
+        function agregarCurso(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            
+            const nuevoCurso = {
+                id: Date.now(),
+                nombre: formData.get('nombre'),
+                descripcion: formData.get('descripcion'),
+                docente: formData.get('docente'),
+                horario: formData.get('horario'),
+                cupo: parseInt(formData.get('cupo'))
+            };
+            
+            cursos.push(nuevoCurso);
+            guardarDatos();
+            renderCursosDocente();
+            closeModal('addCourseModal');
+            alert('Curso agregado exitosamente');
+        }
+
+        function eliminarCurso(id) {
+            if (confirm('¿Está seguro de eliminar este curso?')) {
+                cursos = cursos.filter(c => c.id !== id);
+                registros = registros.filter(r => r.cursoId !== id);
+                guardarDatos();
+                renderCursosDocente();
+                renderRegistros();
+                alert('Curso eliminado exitosamente');
+            }
+        }
+
+        function llenarSelectEstudiantes() {
+            const select = document.getElementById('selectEstudiantes');
+            select.innerHTML = '<option value="">Seleccionar estudiante</option>';
+            
+            estudiantes.forEach(estudiante => {
+                select.innerHTML += `<option value="${estudiante.id}">${estudiante.nombre} ${estudiante.apellido}</option>`;
+            });
+        }
+
+        function llenarSelectCursos() {
+            const select = document.getElementById('selectCursos');
+            select.innerHTML = '<option value="">Seleccionar asignatura</option>';
+            
+            cursos.forEach(curso => {
+                select.innerHTML += `<option value="${curso.id}">${curso.nombre}</option>`;
+            });
+        }
+
+        function agregarRegistro(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            
+            const estudiante = estudiantes.find(e => e.id == formData.get('estudianteId'));
+            const curso = cursos.find(c => c.id == formData.get('cursoId'));
+            
+            const nuevoRegistro = {
+                id: Date.now(),
+                estudianteId: parseInt(formData.get('estudianteId')),
+                cursoId: parseInt(formData.get('cursoId')),
+                estudiante: `${estudiante.nombre} ${estudiante.apellido}`,
+                asignatura: curso.nombre,
+                fecha: formData.get('fecha'),
+                asistencia: formData.get('asistencia'),
+                calificacion: formData.get('calificacion') ? parseFloat(formData.get('calificacion')) : null,
+                observaciones: formData.get('observaciones')
+            };
+            
+            registros.push(nuevoRegistro);
+            guardarDatos();
+            renderRegistros();
+            closeModal('addRegistroModal');
+            alert('Registro agregado exitosamente');
+        }
+
+        function eliminarRegistro(id) {
+            if (confirm('¿Está seguro de eliminar este registro?')) {
+                registros = registros.filter(r => r.id !== id);
+                guardarDatos();
+                renderRegistros();
+                alert('Registro eliminado exitosamente');
+            }
+        }
+
+        // Guardar datos iniciales
+        if (!localStorage.getItem('estudiantes')) {
+            guardarDatos();
+        }
     </script>
 </body>
 </html>
