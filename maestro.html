@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Docente - Schoologycal</title>
+    <style>
+        /* ESTILOS INCLUIDOS DIRECTAMENTE - FIDELIDAD AL PDF */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: white;
+            color: black;
+            line-height: 1.6;
+        }
+        
+        .dashboard-header {
+            background: #f8f9fa;
+            padding: 20px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .teacher-name {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        
+        .teacher-email {
+            color: #666;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .nav-tab {
+            padding: 15px 30px;
+            text-decoration: none;
+            color: #333;
+            border-bottom: 3px solid transparent;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .nav-tab.active {
+            border-bottom-color: #007bff;
+            color: #007bff;
+        }
+        
+        .dashboard-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .logout-btn:hover {
+            background: #c82333;
+        }
+        
+        /* Estilos para tablas */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .table th, .table td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        /* Botones de acción */
+        .action-btn {
+            padding: 6px 12px;
+            margin: 2px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .edit-btn {
+            background: #ffc107;
+            color: black;
+        }
+        
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .add-btn {
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        /* Formularios */
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 500px;
+            max-width: 90%;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .cancel-btn {
+            background: #6c757d;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .save-btn {
+            background: #007bff;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .attendance-present {
+            color: green;
+            font-weight: bold;
+        }
+
+        .attendance-absent {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header del Dashboard -->
+    <div class="dashboard-header">
+        <div class="user-info">
+            <div>
+                <div class="teacher-name">NOMBRE DEL DOCENTE</div>
+                <div class="teacher-email">docente@reallygreatsite.com</div>
+            </div>
+            <button class="logout-btn" onclick="logout()">Cerrar sesión</button>
+        </div>
+    </div>
+    
+    <!-- Navegación -->
+    <div class="nav-tabs">
+        <div class="nav-tab active" data-section="gestion-estudiantes">Gestionar estudiantes</div>
+        <div class="nav-tab" data-section="gestion-cursos">Gestionar cursos</div>
+        <div class="nav-tab" data-section="registros">Registro</div>
+    </div>
+    
+    <!-- Contenido Principal -->
+    <div class="dashboard-content">
+        <!-- SECCIÓN: GESTIÓN DE ESTUDIANTES -->
+        <div id="gestion-estudiantes" class="section active">
+            <h1>Gestionar estudiantes</h1>
+            <input type="text" class="search-box" placeholder="Buscar por nombre o DNI..." onkeyup="buscarEstudiantes(this.value)">
+            <button class="add-btn" onclick="openAddStudentModal()">+ Agregar estudiante</button>
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Email</th>
+                        <th>DNI</th>
+                        <th>Grado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-estudiantes">
+                    <!-- Los estudiantes se cargan aquí dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- SECCIÓN: GESTIÓN DE CURSOS -->
+        <div id="gestion-cursos" class="section">
+            <h1>Gestionar cursos</h1>
+            <input type="text" class="search-box" placeholder="Buscar por curso o docente..." onkeyup="buscarCursos(this.value)">
+            <button class="add-btn" onclick="openAddCourseModal()">+ Agregar curso</button>
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre del Curso</th>
+                        <th>Descripción</th>
+                        <th>Docente</th>
+                        <th>Horario</th>
+                        <th>Cupo Máx.</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-cursos">
+                    <!-- Los cursos se cargan aquí dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- SECCIÓN: REGISTROS -->
+        <div id="registros" class="section">
+            <h1>Registro de asistencia y calificaciones</h1>
+            
+            <div class="form-group">
+                <label for="filtro-asignatura">Asignatura:</label>
+                <select id="filtro-asignatura" onchange="filtrarRegistros()">
+                    <option value="todas">TODAS LAS ASIGNATURAS</option>
+                    <!-- Las asignaturas se cargan dinámicamente -->
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="filtro-tipo">Tipo de registro:</label>
+                <select id="filtro-tipo" onchange="filtrarRegistros()">
+                    <option value="todas">TODA LA ASISTENCIA</option>
+                    <option value="asistencia">Asistencia</option>
+                    <option value="calificacion">Calificaciones</option>
+                </select>
+            </div>
+            
+            <button class="add-btn" onclick="openAddRegistroModal()">Añadir registro</button>
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Estudiante</th>
+                        <th>Asignatura</th>
+                        <th>Fecha</th>
+                        <th>Asistencia</th>
+                        <th>Calificación</th>
+                        <th>Observaciones</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-registros">
+                    <!-- Los registros se cargan aquí dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- MODALES PARA ESTUDIANTES -->
+    <div id="addStudentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Añadir estudiante</h2>
+                <button class="close-btn" onclick="closeAddStudentModal()">&times;</button>
+            </div>
+            <form id="formAddStudent">
+                <div class="form-group">
+                    <label>NOMBRE</label>
+                    <input type="text" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label>APELLIDO</label>
+                    <input type="text" name="apellido" required>
+                </div>
+                <div class="form-group">
+                    <label>EMAIL</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>DNI</label>
+                    <input type="text" name="dni" required>
+                </div>
+                <div class="form-group">
+                    <label>GRADO</label>
+                    <input type="text" name="grado" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" onclick="closeAddStudentModal()">Cancelar</button>
+                    <button type="submit" class="save-btn">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="editStudentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editar estudiante</h2>
+                <button class="close-btn" onclick="closeEditStudentModal()">&times;</button>
+            </div>
+            <form id="formEditStudent">
+                <input type="hidden" name="id">
+                <div class="form-group">
+                    <label>NOMBRE</label>
+                    <input type="text" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label>APELLIDO</label>
+                    <input type="text" name="apellido" required>
+                </div>
+                <div class="form-group">
+                    <label>EMAIL</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>DNI</label>
+                    <input type="text" name="dni" required>
+                </div>
+                <div class="form-group">
+                    <label>GRADO</label>
+                    <input type="text" name="grado" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" onclick="closeEditStudentModal()">Cancelar</button>
+                    <button type="submit" class="save-btn">Guardar cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="deleteStudentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Eliminar estudiante</h2>
+                <button class="close-btn" onclick="closeDeleteStudentModal()">&times;</button>
+            </div>
+            <p>¿Está seguro de eliminar este estudiante?</p>
+            <div class="form-actions">
+                <button type="button" class="cancel-btn" onclick="closeDeleteStudentModal()">Cancelar</button>
+                <button type="button" class="delete-btn" id="confirmDeleteStudent">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALES PARA CURSOS -->
+    <div id="addCourseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Añadir curso</h2>
+                <button class="close-btn" onclick="closeAddCourseModal()">&times;</button>
+            </div>
+            <form id="formAddCourse">
+                <div class="form-group">
+                    <label>NOMBRE DEL CURSO</label>
+                    <input type="text" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label>DESCRIPCIÓN</label>
+                    <textarea name="descripcion" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>DOCENTE</label>
+                    <input type="text" name="docente" value="NOMBRE DEL DOCENTE" required>
+                </div>
+                <div class="form-group">
+                    <label>HORARIO</label>
+                    <input type="text" name="horario" placeholder="Lunes y Miércoles 10:00-12:00" required>
+                </div>
+                <div class="form-group">
+                    <label>CUPO MAX.</label>
+                    <input type="number" name="cupo" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" onclick="closeAddCourseModal()">Cancelar</button>
+                    <button type="submit" class="save-btn">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="editCourseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editar curso</h2>
+                <button class="close-btn" onclick="closeEditCourseModal()">&times;</button>
+            </div>
+            <form id="formEditCourse">
+                <input type="hidden" name="id">
+                <div class="form-group">
+                    <label>NOMBRE DEL CURSO</label>
+                    <input type="text" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label>DESCRIPCIÓN</label>
+                    <textarea name="descripcion" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>DOCENTE</label>
+                    <input type="text" name="docente" required>
+                </div>
+                <div class="form-group">
+                    <label>HORARIO</label>
+                    <input type="text" name="horario" required>
+                </div>
+                <div class="form-group">
+                    <label>CUPO MAX.</label>
+                    <input type="number" name="cupo" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" onclick="closeEditCourseModal()">Cancelar</button>
+                    <button type="submit" class="save-btn">Guardar cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="deleteCourseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Eliminar curso</h2>
+                <button class="close-btn" onclick="closeDeleteCourseModal()">&times;</button>
+            </div>
+            <p>¿Está seguro de eliminar este curso?</p>
+            <div class="form-actions">
+                <button type="button" class="cancel-btn" onclick="closeDeleteCourseModal()">Cancelar</button>
+                <button type="button" class="delete-btn" id="confirmDeleteCourse">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALES PARA REGISTROS -->
+    <div id="addRegistroModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Añadir registro</h2>
+                <button class="close-btn" onclick="closeAddRegistroModal()">&times;</button>
+            </div>
+            <form id="formAddRegistro">
+                <div class="form-group">
+                    <label>ESTUDIANTE</label>
+                    <select name="estudianteId" required>
+                        <option value="">Seleccionar estudiante</option>
+                        <!-- Se llena dinámicamente -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>ASIGNATURA</label>
+                    <select name="cursoId" required>
+                        <option value="">Seleccionar asignatura</option>
+                        <!-- Se llena dinámicamente -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>FECHA</label>
+                    <input type="date" name="fecha" required>
+                </div>
+                <div class="form-group">
+                    <label>TIPO DE REGISTRO</label>
+                    <select name="tipo" id="tipoRegistro" onchange="toggleCamposRegistro()" required>
+                        <option value="asistencia">Asistencia</option>
+                        <option value="calificacion">Calificación</option>
+                        <option value="ambos">Ambos</option>
+                    </select>
+                </div>
+                <div class="form-group" id="campoAsistencia">
+                    <label>ASISTENCIA</label>
+                    <select name="asistencia">
+                        <option value="Presente">✅ Presente</option>
+                        <option value="Ausente">❌ Ausente</option>
+                        <option value="Justificado">⚠️ Justificado</option>
+                    </select>
+                </div>
+                <div class="form-group" id="campoCalificacion" style="display: none;">
+                    <label>CALIFICACIÓN (0-20)</label>
+                    <input type="number" name="calificacion" min="0" max="20" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label>OBSERVACIONES</label>
+                    <textarea name="observaciones" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" onclick="closeAddRegistroModal()">Cancelar</button>
+                    <button type="submit" class="save-btn">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ========== SISTEMA DE ALMACENAMIENTO ==========
+        let estudiantes = JSON.parse(localStorage.getItem('estudiantes')) || [
+            {
+                id: 1,
+                nombre: "Juan",
+                apellido: "Pérez",
+                email: "juan@email.com",
+                dni: "12345678",
+                grado: "10mo Grado"
+            }
+        ];
+
+        let cursos = JSON.parse(localStorage.getItem('cursos')) || [
+            {
+                id: 1,
+                nombre: "Matemáticas Avanzadas",
+                descripcion: "Curso de matemáticas para nivel avanzado",
+                docente: "NOMBRE DEL DOCENTE",
+                horario: "Lunes y Miércoles 10:00-12:00",
+                cupo: 30
+            },
+            {
+                id: 2,
+                nombre: "Literatura",
+                descripcion: "Curso de literatura universal",
+                docente: "NOMBRE DEL DOCENTE",
+                horario: "Martes y Jueves 14:00-16:00",
+                cupo: 25
+            }
+        ];
+
+        let registros = JSON.parse(localStorage.getItem('registros')) || [
+            {
+                id: 1,
+                estudianteId: 1,
+                cursoId: 1,
+                estudiante: "Juan Pérez",
+                asignatura: "Matemáticas Avanzadas",
+                fecha: "2024-01-15",
+                asistencia: "Presente",
+                calificacion: 18,
+                observaciones: "Excelente participación",
+                tipo: "ambos"
+            }
+        ];
+
+        // Guardar datos en LocalStorage
+        function guardarDatos() {
+            localStorage.setItem('estudiantes', JSON.stringify(estudiantes));
+            localStorage.setItem('cursos', JSON.stringify(cursos));
+            localStorage.setItem('registros', JSON.stringify(registros));
+        }
+
+        // ========== FUNCIONES PARA ESTUDIANTES ==========
+        function renderEstudiantes() {
+            const tbody = document.getElementById('tabla-estudiantes');
+            tbody.innerHTML = '';
+            
+            if (estudiantes.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No hay estudiantes registrados</td></tr>';
+                return;
+            }
+            
+            estudiantes.forEach(estudiante => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${estudiante.nombre}</td>
+                    <td>${estudiante.apellido}</td>
+                    <td>${estudiante.email}</td>
+                    <td>${estudiante.dni}</td>
+                    <td>${estudiante.grado}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="openEditStudentModal(${estudiante.id})">Editar</button>
+                        <button class="action-btn delete-btn" onclick="openDeleteStudentModal(${estudiante.id})">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function buscarEstudiantes(termino) {
+            const estudiantesFiltrados = termino ? 
+                estudiantes.filter(est =>
+                    est.nombre.toLowerCase().includes(termino.toLowerCase()) ||
+                    est.apellido.toLowerCase().includes(termino.toLowerCase()) ||
+                    est.dni.includes(termino)
+                ) : estudiantes;
+            
+            const tbody = document.getElementById('tabla-estudiantes');
+            tbody.innerHTML = '';
+            
+            if (estudiantesFiltrados.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No se encontraron estudiantes</td></tr>';
+                return;
+            }
+            
+            estudiantesFiltrados.forEach(estudiante => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${estudiante.nombre}</td>
+                    <td>${estudiante.apellido}</td>
+                    <td>${estudiante.email}</td>
+                    <td>${estudiante.dni}</td>
+                    <td>${estudiante.grado}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="openEditStudentModal(${estudiante.id})">Editar</button>
+                        <button class="action-btn delete-btn" onclick="openDeleteStudentModal(${estudiante.id})">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function agregarEstudiante(datos) {
+            const nuevoEstudiante = {
+                id: Date.now(),
+                ...datos
+            };
+            estudiantes.push(nuevoEstudiante);
+            guardarDatos();
+            renderEstudiantes();
+            closeAddStudentModal();
+            alert('Estudiante agregado exitosamente');
+        }
+
+        function editarEstudiante(id, datos) {
+            const index = estudiantes.findIndex(e => e.id === id);
+            if (index !== -1) {
+                estudiantes[index] = { ...estudiantes[index], ...datos };
+                guardarDatos();
+                renderEstudiantes();
+                closeEditStudentModal();
+                alert('Estudiante actualizado exitosamente');
+            }
+        }
+
+        function eliminarEstudiante(id) {
+            estudiantes = estudiantes.filter(e => e.id !== id);
+            // También eliminar registros asociados
+            registros = registros.filter(r => r.estudianteId !== id);
+            guardarDatos();
+            renderEstudiantes();
+            renderRegistros();
+            closeDeleteStudentModal();
+            alert('Estudiante eliminado exitosamente');
+        }
+
+        // ========== FUNCIONES PARA CURSOS ==========
+        function renderCursos() {
+            const tbody = document.getElementById('tabla-cursos');
+            tbody.innerHTML = '';
+            
+            if (cursos.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No hay cursos registrados</td></tr>';
+                return;
+            }
+            
+            cursos.forEach(curso => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${curso.nombre}</td>
+                    <td>${curso.descripcion}</td>
+                    <td>${curso.docente}</td>
+                    <td>${curso.horario}</td>
+                    <td>${curso.cupo}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="openEditCourseModal(${curso.id})">Editar</button>
+                        <button class="action-btn delete-btn" onclick="openDeleteCourseModal(${curso.id})">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Actualizar filtros de asignaturas
+            actualizarFiltrosAsignaturas();
+        }
+
+        function buscarCursos(termino) {
+            const cursosFiltrados = termino ? 
+                cursos.filter(curso =>
+                    curso.nombre.toLowerCase().includes(termino.toLowerCase()) ||
+                    curso.docente.toLowerCase().includes(termino.toLowerCase())
+                ) : cursos;
+            
+            const tbody = document.getElementById('tabla-cursos');
+            tbody.innerHTML = '';
+            
+            if (cursosFiltrados.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No se encontraron cursos</td></tr>';
+                return;
+            }
+            
+            cursosFiltrados.forEach(curso => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${curso.nombre}</td>
+                    <td>${curso.descripcion}</td>
+                    <td>${curso.docente}</td>
+                    <td>${curso.horario}</td>
+                    <td>${curso.cupo}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="openEditCourseModal(${curso.id})">Editar</button>
+                        <button class="action-btn delete-btn" onclick="openDeleteCourseModal(${curso.id})">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function agregarCurso(datos) {
+            const nuevoCurso = {
+                id: Date.now(),
+                ...datos
+            };
+            cursos.push(nuevoCurso);
+            guardarDatos();
+            renderCursos();
+            closeAddCourseModal();
+            alert('Curso agregado exitosamente');
+        }
+
+        function editarCurso(id, datos) {
+            const index = cursos.findIndex(c => c.id === id);
+            if (index !== -1) {
+                cursos[index] = { ...cursos[index], ...datos };
+                guardarDatos();
+                renderCursos();
+                closeEditCourseModal();
+                alert('Curso actualizado exitosamente');
+            }
+        }
+
+        function eliminarCurso(id) {
+            cursos = cursos.filter(c => c.id !== id);
+            // También eliminar registros asociados
+            registros = registros.filter(r => r.cursoId !== id);
+            guardarDatos();
+            renderCursos();
+            renderRegistros();
+            closeDeleteCourseModal();
+            alert('Curso eliminado exitosamente');
+        }
+
+        // ========== FUNCIONES PARA REGISTROS ==========
+        function renderRegistros() {
+            const tbody = document.getElementById('tabla-registros');
+            tbody.innerHTML = '';
+            
+            const filtroAsignatura = document.getElementById('filtro-asignatura').value;
+            const filtroTipo = document.getElementById('filtro-tipo').value;
+            
+            let registrosFiltrados = registros;
+            
+            // Filtrar por asignatura
+            if (filtroAsignatura !== 'todas') {
+                registrosFiltrados = registrosFiltrados.filter(r => r.cursoId == filtroAsignatura);
+            }
+            
+            // Filtrar por tipo
+            if (filtroTipo !== 'todas') {
+                if (filtroTipo === 'asistencia') {
+                    registrosFiltrados = registrosFiltrados.filter(r => r.asistencia);
+                } else if (filtroTipo === 'calificacion') {
+                    registrosFiltrados = registrosFiltrados.filter(r => r.calificacion);
+                }
+            }
+            
+            if (registrosFiltrados.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No hay registros</td></tr>';
+                return;
+            }
+            
+            registrosFiltrados.forEach(registro => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${registro.estudiante}</td>
+                    <td>${registro.asignatura}</td>
+                    <td>${registro.fecha}</td>
+                    <td class="${registro.asistencia === 'Presente' ? 'attendance-present' : 'attendance-absent'}">${registro.asistencia || '-'}</td>
+                    <td>${registro.calificacion || '-'}</td>
+                    <td>${registro.observaciones}</td>
+                    <td>
+                        <button class="action-btn edit-btn">Editar</button>
+                        <button class="action-btn delete-btn" onclick="eliminarRegistro(${registro.id})">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filtrarRegistros() {
+            renderRegistros();
+        }
+
+        function actualizarFiltrosAsignaturas() {
+            const selectFiltro = document.getElementById('filtro-asignatura');
+            const selectRegistro = document.querySelector('#formAddRegistro select[name="cursoId"]');
+            
+            selectFiltro.innerHTML = '<option value="todas">TODAS LAS ASIGNATURAS</option>';
+            selectRegistro.innerHTML = '<option value="">Seleccionar asignatura</option>';
+            
+            cursos.forEach(curso => {
+                selectFiltro.innerHTML += `<option value="${curso.id}">${curso.nombre}</option>`;
+                selectRegistro.innerHTML += `<option value="${curso.id}">${curso.nombre}</option>`;
+            });
+        }
+
+        function llenarSelectEstudiantes() {
+            const select = document.querySelector('#formAddRegistro select[name="estudianteId"]');
+            select.innerHTML = '<option value="">Seleccionar estudiante</option>';
+            
+            estudiantes.forEach(estudiante => {
+                select.innerHTML += `<option value="${estudiante.id}">${estudiante.nombre} ${estudiante.apellido}</option>`;
+            });
+        }
+
+        function toggleCamposRegistro() {
+            const tipo = document.getElementById('tipoRegistro').value;
+            const campoAsistencia = document.getElementById('campoAsistencia');
+            const campoCalificacion = document.getElementById('campoCalificacion');
+            
+            if (tipo === 'asistencia') {
+                campoAsistencia.style.display = 'block';
+                campoCalificacion.style.display = 'none';
+            } else if (tipo === 'calificacion') {
+                campoAsistencia.style.display = 'none';
+                campoCalificacion.style.display = 'block';
+            } else {
+                campoAsistencia.style.display = 'block';
+                campoCalificacion.style.display = 'block';
+            }
+        }
+
+        function agregarRegistro(datos) {
+            const estudiante = estudiantes.find(e => e.id == datos.estudianteId);
+            const curso = cursos.find(c => c.id == datos.cursoId);
+            
+            if (!estudiante || !curso) {
+                alert('Error: Estudiante o curso no encontrado');
+                return;
+            }
+            
+            const nuevoRegistro = {
+                id: Date.now(),
+                estudianteId: datos.estudianteId,
+                cursoId: datos.cursoId,
+                estudiante: `${estudiante.nombre} ${estudiante.apellido}`,
+                asignatura: curso.nombre,
+                fecha: datos.fecha,
+                asistencia: datos.asistencia,
+                calificacion: datos.calificacion ? parseFloat(datos.calificacion) : null,
+                observaciones: datos.observaciones,
+                tipo: datos.tipo
+            };
+            
+            registros.push(nuevoRegistro);
+            guardarDatos();
+            renderRegistros();
+            closeAddRegistroModal();
+            alert('Registro agregado exitosamente');
+        }
+
+        function eliminarRegistro(id) {
+            if (confirm('¿Está seguro de eliminar este registro?')) {
+                registros = registros.filter(r => r.id !== id);
+                guardarDatos();
+                renderRegistros();
+                alert('Registro eliminado exitosamente');
+            }
+        }
+
+        // ========== MANEJO DE MODALES ==========
+        // Estudiantes
+        function openAddStudentModal() {
+            document.getElementById('addStudentModal').style.display = 'flex';
+            document.getElementById('formAddStudent').reset();
+        }
+
+        function closeAddStudentModal() {
+            document.getElementById('addStudentModal').style.display = 'none';
+        }
+
+        function openEditStudentModal(id) {
+            const estudiante = estudiantes.find(e => e.id === id);
+            if (estudiante) {
+                document.getElementById('editStudentModal').style.display = 'flex';
+                document.querySelector('#formEditStudent input[name="id"]').value = estudiante.id;
+                document.querySelector('#formEditStudent input[name="nombre"]').value = estudiante.nombre;
+                document.querySelector('#formEditStudent input[name="apellido"]').value = estudiante.apellido;
+                document.querySelector('#formEditStudent input[name="email"]').value = estudiante.email;
+                document.querySelector('#formEditStudent input[name="dni"]').value = estudiante.dni;
+                document.querySelector('#formEditStudent input[name="grado"]').value = estudiante.grado;
+            }
+        }
+
+        function closeEditStudentModal() {
+            document.getElementById('editStudentModal').style.display = 'none';
+        }
+
+        function openDeleteStudentModal(id) {
+            document.getElementById('deleteStudentModal').style.display = 'flex';
+            document.getElementById('confirmDeleteStudent').onclick = () => eliminarEstudiante(id);
+        }
+
+        function closeDeleteStudentModal() {
+            document.getElementById('deleteStudentModal').style.display = 'none';
+        }
+
+        // Cursos
+        function openAddCourseModal() {
+            document.getElementById('addCourseModal').style.display = 'flex';
+            document.getElementById('formAddCourse').reset();
+        }
+
+        function closeAddCourseModal() {
+            document.getElementById('addCourseModal').style.display = 'none';
+        }
+
+        function openEditCourseModal(id) {
+            const curso = cursos.find(c => c.id === id);
+            if (curso) {
+                document.getElementById('editCourseModal').style.display = 'flex';
+                document.querySelector('#formEditCourse input[name="id"]').value = curso.id;
+                document.querySelector('#formEditCourse input[name="nombre"]').value = curso.nombre;
+                document.querySelector('#formEditCourse textarea[name="descripcion"]').value = curso.descripcion;
+                document.querySelector('#formEditCourse input[name="docente"]').value = curso.docente;
+                document.querySelector('#formEditCourse input[name="horario"]').value = curso.horario;
+                document.querySelector('#formEditCourse input[name="cupo"]').value = curso.cupo;
+            }
+        }
+
+        function closeEditCourseModal() {
+            document.getElementById('editCourseModal').style.display = 'none';
+        }
+
+        function openDeleteCourseModal(id) {
+            document.getElementById('deleteCourseModal').style.display = 'flex';
+            document.getElementById('confirmDeleteCourse').onclick = () => eliminarCurso(id);
+        }
+
+        function closeDeleteCourseModal() {
+            document.getElementById('deleteCourseModal').style.display = 'none';
+        }
+
+        // Registros
+        function openAddRegistroModal() {
+            document.getElementById('addRegistroModal').style.display = 'flex';
+            document.getElementById('formAddRegistro').reset();
+            llenarSelectEstudiantes();
+            toggleCamposRegistro();
+        }
+
+        function closeAddRegistroModal() {
+            document.getElementById('addRegistroModal').style.display = 'none';
+        }
+
+        // ========== EVENT LISTENERS ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            // Formulario agregar estudiante
+            document.getElementById('formAddStudent').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const datos = {
+                    nombre: formData.get('nombre'),
+                    apellido: formData.get('apellido'),
+                    email: formData.get('email'),
+                    dni: formData.get('dni'),
+                    grado: formData.get('grado')
+                };
+                agregarEstudiante(datos);
+            });
+
+            // Formulario editar estudiante
+            document.getElementById('formEditStudent').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const id = parseInt(formData.get('id'));
+                const datos = {
+                    nombre: formData.get('nombre'),
+                    apellido: formData.get('apellido'),
+                    email: formData.get('email'),
+                    dni: formData.get('dni'),
+                    grado: formData.get('grado')
+                };
+                editarEstudiante(id, datos);
+            });
+
+            // Formulario agregar curso
+            document.getElementById('formAddCourse').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const datos = {
+                    nombre: formData.get('nombre'),
+                    descripcion: formData.get('descripcion'),
+                    docente: formData.get('docente'),
+                    horario: formData.get('horario'),
+                    cupo: parseInt(formData.get('cupo'))
+                };
+                agregarCurso(datos);
+            });
+
+            // Formulario editar curso
+            document.getElementById('formEditCourse').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const id = parseInt(formData.get('id'));
+                const datos = {
+                    nombre: formData.get('nombre'),
+                    descripcion: formData.get('descripcion'),
+                    docente: formData.get('docente'),
+                    horario: formData.get('horario'),
+                    cupo: parseInt(formData.get('cupo'))
+                };
+                editarCurso(id, datos);
+            });
+
+            // Formulario agregar registro
+            document.getElementById('formAddRegistro').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const datos = {
+                    estudianteId: formData.get('estudianteId'),
+                    cursoId: formData.get('cursoId'),
+                    fecha: formData.get('fecha'),
+                    tipo: formData.get('tipo'),
+                    asistencia: formData.get('asistencia'),
+                    calificacion: formData.get('calificacion'),
+                    observaciones: formData.get('observaciones')
+                };
+                agregarRegistro(datos);
+            });
+
+            // Navegación entre secciones
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    const sectionId = this.getAttribute('data-section');
+                    document.getElementById(sectionId).classList.add('active');
+                });
+            });
+
+            // Cerrar modales al hacer click fuera
+            window.onclick = function(event) {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            }
+
+            // Renderizar datos iniciales
+            renderEstudiantes();
+            renderCursos();
+            renderRegistros();
+            actualizarFiltrosAsignaturas();
+        });
+
+        function logout() {
+            if(confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>
